@@ -27,6 +27,7 @@
       - net-snmp
       - net-snmp-utils
       - python
+      - python2-pip
       - python3-pip
     state: latest
 
@@ -57,8 +58,8 @@
 - name: start and enable nagios
   service:
     name: nagios
-    state: started
-    enabled: yes
+    state: restarted
+    enabled: true
 
 - name: start and enable httpd
   service:
