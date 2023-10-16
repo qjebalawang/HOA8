@@ -1,0 +1,63 @@
+---
+- name: installation of nagios dependencies and libraries
+  tags: dependencies, libraries
+  apt:
+    name:
+      - autoconf
+      - libc6
+      - gcc
+      - make
+      - wget
+      - unzip
+      - apache2
+      - php
+      - libapache2-mod-php
+      - libgd-dev
+      - openssl
+      - libssl-dev
+      - bc
+      - gawk
+      - dc
+      - build-essential
+      - snmp
+      - libnet-snmp-perl
+      - gettext
+      - python3
+      - python3-pip
+    state: latest
+
+- name: install passlib package
+  pip:
+    name: passlib
+
+- name: assign nagios path directory
+  file:
+    path: ~/nagios
+    state: directory
+
+- name: download nagios
+  unarchive:
+    src: https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.6.tar.gz
+    dest: ~/nagios
+    remote_src: yes
+    mode: 0777
+    owner: root
+    group: root
+
+- name: add users to nagios
+  community.general.htpasswd:
+    path: /usr/local/nagios/etc/htpasswd.users
+    name: admin
+    password: admin
+
+- name: start and enable nagios
+  service:
+    name: nagios
+    state: started
+    enabled: yes
+
+- name: start and enable apache
+  service:
+    name: apache2
+    state: restarted
+    enabled: true
